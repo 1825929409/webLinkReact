@@ -18,6 +18,7 @@ const { Option } = Select
 export default class Index extends Component {
   constructor(props) {
     super(props)
+      this.updateWeblink = this.updateWeblink.bind(this);
     this.state = {
       loading: false,
     }
@@ -26,9 +27,41 @@ export default class Index extends Component {
 
   // 组件已经加载到dom中
   componentDidMount() {
+      console.log(this.props)
     this.props.form.resetFields()
   }
 
+
+  updateWeblink (guid,idcardNo,policeCode) {
+      console.log(guid);
+      console.log(idcardNo);
+      console.log(policeCode);
+      $.ajax({
+          url: path.path1 + 'updateWeblink',
+          type: 'post',
+          data: {
+              guid : guid,
+              weblink : idcardNo,
+              state : policeCode,
+          },
+          dataType: 'text',
+          // cashe: false,
+          async: false,
+          success: function (res) {
+              let obj = res;
+              if (obj == '修改成功'){
+                message.success(obj)
+              }else {
+                message.warning(obj)
+              }
+              this.state.loading = false
+              this.props.handleOk()
+          }.bind(this),
+          error: function (XMLHttpRequest,textStatus,errorThrown) {
+              this.setState({ loading: false })
+          }
+      });
+  }
 
   handleSubmit(e) {
     e.preventDefault()
@@ -36,16 +69,11 @@ export default class Index extends Component {
       if (errors) {
         return;
       }
+      console.log('vvvv');
+      console.log(this.props.type);
       this.setState({ loading: true }, () => {
         if (this.props.type === 'edit') {
-          // fetchUserDetailUpdate({ ...values, deptCode: this.props.deptId, id: this.props.currPeopleId }, (res) => {
-          //   message.success(res.msg)
-          //   this.state.loading = false
-          //   this.props.handleOk()
-          // }, (errorRes) => {
-          //   message.warning(errorRes.msg)
-          //   this.setState({ loading: false })
-          // })
+            this.updateWeblink(this.props.values.id,values.idcardNo,values.policeCode);
         } else {
             console.log(values.chineseName)
             console.log(values.idcardNo)
@@ -53,7 +81,7 @@ export default class Index extends Component {
                 url: path.path1 + 'insertWeblink',
                  type: 'post',
                 data: {
-                    prudoctName : values.chineseName,
+                    productName : values.chineseName,
                     weblink : values.idcardNo,
                 },
                 dataType: 'text',
@@ -107,28 +135,29 @@ export default class Index extends Component {
           <Form layout="horizontal" onSubmit={this.handleSubmit}>
             <FormItem {...formItemLayout} label="名称" hasFeedback>
               {getFieldDecorator('chineseName', {
-                initialValue: values.chineseName || '',
+                initialValue: values.post || '',
                 rules: [{ required: true, message: '请输入名称' }],
-              })(<Input placeholder="请输入名称" />)}
+              })(<Input placeholder="请输入名称" disabled={this.props.type === 'edit'}/>)}
             </FormItem>
             <FormItem {...formItemLayout} label="链接" hasFeedback>
               {getFieldDecorator('idcardNo', {
-                initialValue: values.idcardNo || '',
+                initialValue: values.username || '',
                 rules: [
                   { required: true, message: '请输入链接' },
                   // { pattern: regExpConfig.IDcard, message: '身份证号格式不正确' },
                 ],
-              })(<Input placeholder="请输入链接" disabled={this.props.type === 'edit'} />)}
+              })(<Input placeholder="请输入链接" />)}
+                {/*disabled={this.props.type === 'edit'} />*/}
             </FormItem>
-            {/*<FormItem {...formItemLayout} label="警号" hasFeedback>*/}
-              {/*{getFieldDecorator('policeCode', {*/}
-                {/*initialValue: values.policeCode || '',*/}
-                {/*rules: [*/}
-                  {/*// { required: true, message: '请输入警号' },*/}
-                  {/*// { pattern: regExpConfig.policeNo, message: '请输入4-10位数字或字母' },*/}
-                {/*],*/}
-              {/*})(<Input placeholder="请输入警号" />)}*/}
-            {/*</FormItem>*/}
+            <FormItem {...formItemLayout} label="状态" hasFeedback>
+              {getFieldDecorator('policeCode', {
+                initialValue: values.statusLabel,
+                rules: [
+                  // { required: true, message: '请输入警号' },
+                  { pattern: regExpConfig.zeroFirst, message: '请输入整数' },
+                ],
+              })(<Input placeholder="1为正常，0为停用" maxLength={1} disabled={this.props.type === 'add'}/>)}
+            </FormItem>
             {/*<FormItem {...formItemLayout} label="登陆用户名" hasFeedback>*/}
               {/*{getFieldDecorator('username', {*/}
                 {/*initialValue: values.username || '',*/}

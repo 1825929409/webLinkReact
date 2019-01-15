@@ -50,43 +50,69 @@ export default class Login extends Component {
       if (!err) {
         const query = this.props.form.getFieldsValue()
         this.setState({ loading: true })
-        this.props.dispatch(login(values, (res) => {
-          sessionStorage.setItem('token', res.data.token)
-          sessionStorage.setItem('ticket', res.data.ticket)
-          getBtns({}, (response) => {
-            console.log('获取菜单id');
-            console.log(response);
-          })
-          menu({}, (response) => {
-            console.log('访问接口');
-            console.log(response);
-            const nav = response.data.list || []
-            if (nav && nav[0]) {
-              sessionStorage.setItem('gMenuList', JSON.stringify(nav))
-              sessionStorage.setItem('topMenuReskey', nav[0].resKey)
-              sessionStorage.setItem('leftNav', JSON.stringify(nav))
+          sessionStorage.setItem('token', '111')
+            sessionStorage.setItem('ticket', '11111')
 
-              staff({ usercode: query.username }, (resp) => {
-                hashHistory.push('/center')
-              }, (r) => {
-                message.warning(r.msg)
-                this.setState({
-                  loading: false,
-                })
-              })
-            }
+          menu({}, (response) => {
+              const nav = response.data.list || []
+              if (nav && nav[0]) {
+                  sessionStorage.setItem('gMenuList', JSON.stringify(nav))
+                  sessionStorage.setItem('topMenuReskey', nav[0].resKey)
+                  sessionStorage.setItem('leftNav', JSON.stringify(nav))
+
+                  hashHistory.push('/center')
+                  // staff({ usercode: query.username }, (resp) => {
+                  // }, (r) => {
+                  //   message.warning(r.msg)
+                  //   this.setState({
+                  //     loading: false,
+                  //   })
+                  // })
+              }
           }, (r) => {
-            // message.warning(r.msg)
-            this.setState({
-              loading: false,
-            })
+              // message.warning(r.msg)
+              this.setState({
+                  loading: false,
+              })
           })
-        }, (res) => {
-          message.warning(res.msg)
-          this.setState({
-            loading: false,
-          })
-        }))
+
+        // this.props.dispatch(login(values, (res) => {
+        //   sessionStorage.setItem('token', res.data.token)
+        //   sessionStorage.setItem('ticket', res.data.ticket)
+        //   // getBtns({}, (response) => {
+        //   //   console.log('获取菜单id');
+        //   //   console.log(response);
+        //   // })
+        //   menu({}, (response) => {
+        //     console.log('访问接口');
+        //     console.log(response);
+        //     const nav = response.data.list || []
+        //     if (nav && nav[0]) {
+        //       sessionStorage.setItem('gMenuList', JSON.stringify(nav))
+        //       sessionStorage.setItem('topMenuReskey', nav[0].resKey)
+        //       sessionStorage.setItem('leftNav', JSON.stringify(nav))
+        //
+        //         hashHistory.push('/center')
+        //       // staff({ usercode: query.username }, (resp) => {
+        //       // }, (r) => {
+        //       //   message.warning(r.msg)
+        //       //   this.setState({
+        //       //     loading: false,
+        //       //   })
+        //       // })
+        //     }
+        //   }, (r) => {
+        //     // message.warning(r.msg)
+        //     this.setState({
+        //       loading: false,
+        //     })
+        //   })
+        // }, (res) => {
+        //   // message.warning(res.msg)
+        //   this.setState({
+        //     loading: false,
+        //   })
+        // }))
       }
     })
   }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 // import PropTypes from 'prop-types'
-import { Spin, notification, Button, Popconfirm, Form, Input, message, Layout } from 'antd'
+import { Spin, notification, Button, Popconfirm, Form, Input, message, Layout,Table } from 'antd'
 import $ from 'jquery';
 import path from './testpath'
 import TableList from '@tableList'
@@ -35,6 +35,7 @@ export default class app extends Component {
     constructor(props) {
         super(props)
         this.getAllData = this.getAllData.bind(this);
+        this.onChange = this.onChange.bind(this);
         this.state = {
             // activeTab: 'list',
             searchtitle: '',
@@ -64,7 +65,9 @@ export default class app extends Component {
             userDetailResult: { list: [], loading: false },
             userRoleSetResult: { list: [], loading: false },
             exampleList: [],
+            pass: [],
             pageLoading : {loading: false},
+            searcho : '',
         }
     }
 
@@ -76,15 +79,19 @@ export default class app extends Component {
     // 组件已经加载到dom中
     componentDidMount() {
         this.props.form.setFieldsValue({ key: '' })
+        console.log(this.props)
     }
 
     getAllData() {
       let _this = this;
         $.ajax({
             url: path.path1 + 'findAllweblink',
-            type: 'get',
+            type: 'post',
+            data: {
+                productName: _this.state.searcho,
+            },
             dataType: 'json',
-            cashe: false,
+            // cashe: false,
             async: true,
             success: function (res) {
                 let obj = res;
@@ -93,7 +100,8 @@ export default class app extends Component {
                     mytext.push({
                         key : i,
                         id : obj[i].guid,
-                        chineseName : '#',
+                        weblink:path.path2+obj[i].guid ,
+                        chineseName : parseInt(i)+1,
                         post : obj[i].productName,
                         username : obj[i].sourceWebLink,
                         statusLabel : obj[i].state,
@@ -114,44 +122,44 @@ export default class app extends Component {
     }
 
     // 获取用户列表数据
-    getData(callback) {
-        // fetchUserList({ ...this.state.searchKey }, (res) => {
-        //     console.log(res)
-        //     this.setState({
-        //         userListResult: res.data,
-        //     })
-        //     callback && callback()
-        // })
-        let _this = this;
-        $.ajax({
-            url: path.path1 + 'findAllweblink',
-            type: 'get',
-            dataType: 'json',
-            cashe: false,
-            async: true,
-            success: function (res) {
-                let obj = res;
-                let mytext = [];
-                for (let i in obj){
-                    mytext.push({
-                        key : i,
-                        id : obj[i].guid,
-                        chineseName : '#',
-                        post : obj[i].productName,
-                        username : obj[i].sourceWebLink,
-                        statusLabel : obj[i].state,
-                    })
-                }
-                _this.setState({
-                    exampleList: mytext
-                })
-                callback && callback()
-            },
-            error: function (XMLHttpRequest,textStatus,errorThrown) {
-            }
-        });
-
-    }
+    // getData(callback) {
+    //     // fetchUserList({ ...this.state.searchKey }, (res) => {
+    //     //     console.log(res)
+    //     //     this.setState({
+    //     //         userListResult: res.data,
+    //     //     })
+    //     //     callback && callback()
+    //     // })
+    //     let _this = this;
+    //     $.ajax({
+    //         url: path.path1 + 'findAllweblink',
+    //         type: 'get',
+    //         dataType: 'json',
+    //         cashe: false,
+    //         async: true,
+    //         success: function (res) {
+    //             let obj = res;
+    //             let mytext = [];
+    //             for (let i in obj){
+    //                 mytext.push({
+    //                     key :  i,
+    //                     id : obj[i].guid,
+    //                     chineseName : parseInt(i)+1,
+    //                     post : obj[i].productName,
+    //                     username : obj[i].sourceWebLink,
+    //                     statusLabel : obj[i].state,
+    //                 })
+    //             }
+    //             _this.setState({
+    //                 exampleList: mytext
+    //             })
+    //             callback && callback()
+    //         },
+    //         error: function (XMLHttpRequest,textStatus,errorThrown) {
+    //         }
+    //     });
+    //
+    // }
 
     // // 删除用户
     // handleDelete(id) {
@@ -183,53 +191,76 @@ export default class app extends Component {
     //     })
     // }
 
-    // 点击人员详情
-    handleUserInfo = (id) => {
-        fetchUserDetail({ id: id }, (res) => {
-            this.setState({
-                userDetailResult: res.data,
-                PoliceAddVisible: true,
-                moduletype: 'edit',
-                moduletitle: '详情',
-                currPeopleId: id,
-            })
-        })
-    }
 
-    // 点击人员角色
-    handleUserRole(id) {
-        fetchUserDetail({ id: id }, (res) => {
-            this.setState({
-                userDetailResult: res.data,
-                RoleVisible: true,
-                currPeopleId: id,
-            })
-        })
-    }
+
+    // // 点击人员角色
+    // handleUserRole(id) {
+    //     fetchUserDetail({ id: id }, (res) => {
+    //         this.setState({
+    //             userDetailResult: res.data,
+    //             RoleVisible: true,
+    //             currPeopleId: id,
+    //         })
+    //     })
+    // }
 
     // 搜索
     handleSearch(e) {
         e.preventDefault()
         const keyword = this.props.form.getFieldValue('key')
+        console.log(keyword)
         this.setState({
             spinloading: true,
-            searchKey: {
-                ...this.state.searchKey,
-                keyword: keyword,
-                pageNo: 1,
-            },
+            searcho: keyword,
         }, () => { this.getAllData(() => { this.setState({ spinloading: false }) }) })
+    }
+
+
+    // 点击人员详情
+    // handleUserInfo(form, key) {
+    //     form.validateFields((error, row) => {
+    //         console.log(row);
+    //         console.log(key)
+    //         if (error) {
+    //             return;
+    //         }
+    //     });
+    // }
+    handleUserInfo = (id,key) => {
+        let _this = this;
+        let arr = _this.state.exampleList;
+        let obj = arr.find(function (obj) {
+            return obj.key === key
+        })
+        // let obj = arr.map(function (item) { return item.id; }).indexOf(id);
+        _this.setState({
+            userDetailResult: obj,
+            PoliceAddVisible: true,
+            moduletype: 'edit',
+            moduletitle: '详情',
+            currPeopleId: id,
+        })
+        // fetchUserDetail({ id: id }, (res) => {
+        //     console.log(res.data)
+        //     this.setState({
+        //         userDetailResult: res.data,
+        //         PoliceAddVisible: true,
+        //         moduletype: 'edit',
+        //         moduletitle: '详情',
+        //         currPeopleId: id,
+        //     })
+        // })
     }
 
     // 点击新增人员的时候判断部门 deptid  是否存在，有则弹窗新增
     policeAdd() {
 
         // if (this.state.searchKey.deptCode) {
-            this.setState({
-                PoliceAddVisible: true,
-                moduletype: 'add',
-                moduletitle: '新增',
-            })
+        this.setState({
+            PoliceAddVisible: true,
+            moduletype: 'add',
+            moduletitle: '新增',
+        })
         // } else {
         //     notification.error({
         //         message: '错误',
@@ -239,13 +270,13 @@ export default class app extends Component {
     }
 
     synchronize() {
-        message.info('用户数据同步中')
+        message.info('数据同步中')
         this.setState({
             synchronizeLoading: true,
         }, () => {
 
             synUser({}, () => {
-                message.success('用户数据同步完成')
+                message.success('数据同步完成')
                 this.setState({
                     synchronizeLoading: false,
                 })
@@ -301,6 +332,10 @@ export default class app extends Component {
         this.getAllData()
     }
 
+    onChange(pagination, filters, sorter){
+        console.log('params', pagination, filters, sorter);
+    }
+
     // 页大小改变事件
     pageSizeChange = (e, pageSize) => {
         this.state.searchKey.pageNo = 1
@@ -316,25 +351,31 @@ export default class app extends Component {
                 title: '编号',
                 dataIndex: 'chineseName',
                 key: 'chineseName',
-                width: '15%',
+                width: '5%',
             },
             {
                 title: '名称',
                 dataIndex: 'post',
                 key: 'post',
-                width: '15%',
+                width: '10%',
             },
             {
                 title: '链接',
                 dataIndex: 'username',
                 key: 'username',
-                width: '35%',
+                width: '20%',
+            },
+            {
+                title: '中转链接',
+                dataIndex: 'weblink',
+                key: 'weblink',
+                width: '55%',
             },
             {
                 title: '状态',
                 dataIndex: 'statusLabel',
                 key: 'statusLabel',
-                width: '15%',
+                width: '5%',
                 render: (text, record, index) => <span>{record.statusLabel ? '正常' : '停用'}</span>,
             },
             // {
@@ -353,36 +394,41 @@ export default class app extends Component {
             {
                 title: '操作',
                 key: 'operate',
-                render: (text, record, index) => {
-                    const { btnRights } = this.state
-                    // console.log(btnRights)
-                    return (
-                        <span>
-              {
-                  btnRights.view ? <span><a onClick={() => this.handleUserInfo(record.id)}>详情</a><span className="" /></span> : null
-              }
-                            {/*{*/}
-                                {/*btnRights.freeze ?*/}
-                                    {/*<span>*/}
-                    {/*<Popconfirm*/}
-                        {/*title={`确认${record.status ? '解冻' : '冻结'}账户?`}*/}
-                        {/*placement="left"*/}
-                        {/*onConfirm={() => this.handleChangeStatus(record.id, `${record.status ? 0 : 1}`)}*/}
-                    {/*>*/}
-                      {/*<a>{record.status ? '解冻账户' : '冻结账户'}</a>*/}
-                    {/*</Popconfirm>*/}
-                  {/*</span> : null*/}
-                            {/*}*/}
-                            {/*{*/}
-                             {/*<span className="ant-divider" />*/}
-                             {/*btnRights.delete ?*/}
-                             {/*<Popconfirm title="删除?" placement="left" onConfirm={() => this.handleDelete(record.id)}>*/}
-                             {/*<a>删除</a>*/}
-                             {/*</Popconfirm> : null*/}
-                             {/*}*/}
-            </span>
-                    )
-                },
+                width: '5%',
+                render: (text, record, index) => <span><a onClick={() => this.handleUserInfo(record.id,record.key)}>详情</a></span>,
+                // render: (text, record ) => {
+                //     {form => (<span><a onClick={() => this.handleUserInfo(form, record.key)}>详情</a></span>)}
+                // },
+            //     render: (text, record, index) => {
+            //         const { btnRights } = this.state
+            //         // console.log(btnRights)
+            //         return (
+            //             <span>
+            //   {
+            //       btnRights.view ? <span><a onClick={() => this.handleUserInfo(record.id)}>详情</a><span className="" /></span> : null
+            //   }
+            //                 {/*{*/}
+            //                     {/*btnRights.freeze ?*/}
+            //                         {/*<span>*/}
+            //         {/*<Popconfirm*/}
+            //             {/*title={`确认${record.status ? '解冻' : '冻结'}账户?`}*/}
+            //             {/*placement="left"*/}
+            //             {/*onConfirm={() => this.handleChangeStatus(record.id, `${record.status ? 0 : 1}`)}*/}
+            //         {/*>*/}
+            //           {/*<a>{record.status ? '解冻账户' : '冻结账户'}</a>*/}
+            //         {/*</Popconfirm>*/}
+            //       {/*</span> : null*/}
+            //                 {/*}*/}
+            //                 {/*{*/}
+            //                  {/*<span className="ant-divider" />*/}
+            //                  {/*btnRights.delete ?*/}
+            //                  {/*<Popconfirm title="删除?" placement="left" onConfirm={() => this.handleDelete(record.id)}>*/}
+            //                  {/*<a>删除</a>*/}
+            //                  {/*</Popconfirm> : null*/}
+            //                  {/*}*/}
+            // </span>
+            //         )
+            //     },
             },
         ]
     }
@@ -406,31 +452,38 @@ export default class app extends Component {
         <Layout>
           <Layout className="page-body">
             <Content>
-              <h3 className="page-title">
-              </h3>
+              {/*<h3 className="page-title">*/}
+              {/*</h3>*/}
               <div className="page-header">
                 <div className="layout-between">
                   <Form className="flexrow" onSubmit={e => this.handleSearch(e)}>
                     <FormItem>
-                        {getFieldDecorator('key')(<Input className="input-base-width" size="default" placeholder="请输入关键字进行搜索" />)}
+                        {getFieldDecorator('key')(<Input className="input-base-width" size="default" placeholder="请输入名称进行搜索" />)}
                     </FormItem>
                     <Button type="primary" htmlType="submit" >搜索</Button>
                   </Form>
                 </div>
               </div>
               <div className="page-content has-pagination table-flex table-scrollfix">
-                <TableList
-                    rowKey="id"
-                    columns={this.renderColumn()}      //表头
-                    dataSource={this.state.exampleList}  //数据源
-                    loading={pageLoading.loading}  //加载
-                    // currentPage={this.state.searchKey.pageNo}   //开始页
-                    // pageSize={this.state.searchKey.pageSize}   //一页展示条数
-                    // scroll={{ y: true }}
-                    // onChange={this.pageChange}   //值改变
-                    // onShowSizeChange={this.pageSizeChange}   //展示多少条
-                    // totalCount={this.state.exampleList.length}  //左边长度
-                />
+                {/*<TableList*/}
+                    {/*rowKey="id"*/}
+                    {/*columns={this.renderColumn()}      //表头*/}
+                    {/*dataSource={this.state.exampleList}  //数据源*/}
+                    {/*loading={pageLoading.loading}  //加载*/}
+                    {/*// currentPage={this.state.searchKey.pageNo}   //开始页*/}
+                    {/*// pageSize={this.state.searchKey.pageSize}   //一页展示条数*/}
+                    {/*// scroll={{ y: true }}*/}
+                    {/*// onChange={this.pageChange}   //值改变*/}
+                    {/*// onShowSizeChange={this.pageSizeChange}   //展示多少条*/}
+                    {/*// totalCount={this.state.exampleList.length}  //左边长度*/}
+                {/*/>*/}
+                  <Table
+                      rowKey="id"
+                      columns={this.renderColumn()}
+                      dataSource={this.state.exampleList}
+                      loading={pageLoading.loading}
+                  />
+
               </div>
               <div className="page-footer">
                 <div className="page-footer-buttons">
@@ -458,18 +511,18 @@ export default class app extends Component {
                   />
                   : null
           }
-          {
-              this.state.RoleVisible ?
-                  <SelectRole
-                      visible={this.state.RoleVisible}
-                      handleOkRole={() => this.handleOkRole()}
-                      values={userDetailResult}
-                      currPeopleId={this.state.currPeopleId}
-                      select={userRoleSetResult.list}
-                      onCancel={() => this.handleCancelRole()}
-                  />
-                  : null
-          }
+          {/*{*/}
+              {/*this.state.RoleVisible ?*/}
+                  {/*<SelectRole*/}
+                      {/*visible={this.state.RoleVisible}*/}
+                      {/*handleOkRole={() => this.handleOkRole()}*/}
+                      {/*values={userDetailResult}*/}
+                      {/*currPeopleId={this.state.currPeopleId}*/}
+                      {/*select={userRoleSetResult.list}*/}
+                      {/*onCancel={() => this.handleCancelRole()}*/}
+                  {/*/>*/}
+                  {/*: null*/}
+          {/*}*/}
 
       </div>
     )

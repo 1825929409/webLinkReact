@@ -17,6 +17,7 @@ export const regExpConfig = {
   isNormalEncode: /^(\w||[\u4e00-\u9fa5]){0,}$/, // 是否为非特殊字符（包括数字字母下划线中文）
   isTableName: /^[a-zA-Z][A-Za-z0-9#$_-]{0,29}$/, // 表名
   isInt: /^-?\d+$/, // 整数
+  zeroFirst:/^\+?[0-1]\d*$/, //0 和1
   isTableOtherName: /^[\u4e00-\u9fa5]{0,20}$/, // 别名
   // isText_30: /^(\W|\w{1,2}){0,15}$/, // 正则
   // isText_20: /^(\W|\w{1,2}){0,10}$/, // 正则

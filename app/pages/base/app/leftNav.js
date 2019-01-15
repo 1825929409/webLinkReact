@@ -128,7 +128,7 @@ export default class LeftNav extends Component {
 
   // 二级菜单的生成
   renderLeftNav(options) {
-    // const self = this
+    const self = this
     const children = JSON.parse(sessionStorage.getItem('leftNav')) || []
     console.log('二级菜单');
     console.log(children);
@@ -163,6 +163,32 @@ export default class LeftNav extends Component {
         </SubMenu>
       )
     })
+
+      // const key = `sub${0}`
+      // return (
+      //     <SubMenu key={key}
+      //              title={
+      //                <span>
+      //                 <Icon type="caret-down" title='工作台' />
+      //                 <span className="menu-name">工作台</span>
+      //               </span>
+      //              }
+      //     >
+      //     <Menu.Item key='desk$/index' name='概览'>
+      //       <i className={`qqbicon qqbicon-`} title='概览' />
+      //       <span className="menu-name">概览</span>
+      //     </Menu.Item>
+      //       <Menu.Item key='echarts' name='图表'>
+      //         <i className={`qqbicon qqbicon-`} title='图表' />
+      //         <span className="menu-name">图表</span>
+      //       </Menu.Item>
+      //       <Menu.Item key='editor' name='编辑器'>
+      //         <i className={`qqbicon qqbicon-`} title='编辑器' />
+      //         <span className="menu-name">编辑器</span>
+      //       </Menu.Item>
+      //     </SubMenu>
+      // )
+
   }
 
   // 左侧菜单高亮的控制

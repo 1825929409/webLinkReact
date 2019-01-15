@@ -20,7 +20,7 @@ export default class transit extends Component {
         this.getData = this.getData.bind(this);
         this.getUrlParam = this.getUrlParam.bind(this);
         this.state = {
-            targetId: '',
+            // targetId: '',
             brandName:'正在中转中...',
             userRoleSetResult: { list: [], loading: false },
         }
@@ -28,32 +28,32 @@ export default class transit extends Component {
 
     // 组件即将加载
     componentWillMount() {
-        let targetId = this.getUrlParam('targetId');
-        this.setState({targetId: targetId});
+        // let targetId = this.getUrlParam('targetId=');
+        // this.setState({targetId: targetId});
     }
 
     // 组件已经加载到dom中
     componentDidMount() {
-        this.getData();
+        let targetId = this.getUrlParam('targetId=');
+        this.getData(targetId);
     }
     // 获取url中的参数
     getUrlParam (name) {
-        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-        var r = window.location.search.substr(1).match(reg);
-        if (r!= null) {
-            return decodeURI(r[2]);
+        var r = window.location.href.split(name)[1];
+        if (r != null) {
+            return r;
         }else{
             return null;
         }
     }
 
-    getData = () =>{
+    getData = (targetId) =>{
         let _this = this;
         $.ajax({
             url: path.path1 + 'findWeblinkByGiud',
             type: 'post',
             data:{
-                guid:_this.state.targetId,
+                guid: targetId,
             },
             dataType: 'text',
             async: true,
@@ -64,6 +64,7 @@ export default class transit extends Component {
                     _this.setState({ brandName:'stop...' })
                 }else {
                     window.location.href = obj;
+                    // self.location.href = obj;
                 }
             },
             error: function () {
