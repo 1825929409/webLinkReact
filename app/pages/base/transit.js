@@ -23,19 +23,18 @@ export default class transit extends Component {
             // targetId: '',
             brandName:'正在中转中...',
             userRoleSetResult: { list: [], loading: false },
+            yan: {color:'white'},
         }
     }
 
     // 组件即将加载
     componentWillMount() {
-        // let targetId = this.getUrlParam('targetId=');
-        // this.setState({targetId: targetId});
+        let targetId = this.getUrlParam('targetId=');
+        this.getData(targetId);
     }
 
     // 组件已经加载到dom中
     componentDidMount() {
-        let targetId = this.getUrlParam('targetId=');
-        this.getData(targetId);
     }
     // 获取url中的参数
     getUrlParam (name) {
@@ -61,10 +60,12 @@ export default class transit extends Component {
                 let obj = res;
                 console.log(obj);
                 if (obj == '此链接不存在' || obj == '此链接已关闭'){
-                    _this.setState({ brandName:'stop...' })
+                    _this.setState({
+                        brandName:'此链接已关闭',
+                        yan:{color:'black'},
+                    })
                 }else {
                     window.location.href = obj;
-                    // self.location.href = obj;
                 }
             },
             error: function () {
@@ -73,11 +74,21 @@ export default class transit extends Component {
     }
 
     render() {
+        const center = {
+            position:'absolute',
+            top: '50%',
+            left: '50%',
+            transform:'translate(-50%,-50%)',
+        }
+        const {
+            brandName,
+            yan
+        } = this.state
         return (
             <div className="welcome">
-                <div className="content">
-                    <div className="title"><h1 style={{color:'white'}}>超链接中转站</h1></div>
-                    <div><h2 style={{color:'white'}}>{this.state.brandName}</h2></div>
+                <div className="" style={center}>
+                    <div className="title"><h1 style={yan}>{brandName}</h1></div>
+                    {/*<div><h2 style={yan}>{brandName}</h2></div>*/}
                 </div>
             </div>
         )

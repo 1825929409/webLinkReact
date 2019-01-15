@@ -12,17 +12,19 @@ import {
 
 const FormItem = Form.Item
 const { Option } = Select
+// const Option = Select.Option;
 
 @Form.create({})
 
 export default class Index extends Component {
   constructor(props) {
     super(props)
-      this.updateWeblink = this.updateWeblink.bind(this);
+    this.updateWeblink = this.updateWeblink.bind(this);
+    this.Changeo = this.Changeo.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this)
     this.state = {
       loading: false,
     }
-    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   // 组件已经加载到dom中
@@ -31,6 +33,9 @@ export default class Index extends Component {
     this.props.form.resetFields()
   }
 
+    Changeo(value) {
+        console.log(`selected ${value}`);
+    }
 
   updateWeblink (guid,idcardNo,policeCode) {
       console.log(guid);
@@ -63,6 +68,7 @@ export default class Index extends Component {
       });
   }
 
+
   handleSubmit(e) {
     e.preventDefault()
     this.props.form.validateFields((errors, values) => {
@@ -73,7 +79,15 @@ export default class Index extends Component {
       console.log(this.props.type);
       this.setState({ loading: true }, () => {
         if (this.props.type === 'edit') {
-            this.updateWeblink(this.props.values.id,values.idcardNo,values.policeCode);
+            let status = values.policeCode
+            if (status === '正常'){
+                status = 1;
+            } else if (status === '停用'){
+                status = 0
+            }
+            console.log(status)
+            console.info('shang')
+            this.updateWeblink(this.props.values.id,values.idcardNo,status);
         } else {
             console.log(values.chineseName)
             console.log(values.idcardNo)
@@ -94,8 +108,8 @@ export default class Index extends Component {
                     this.props.handleOk()
                 }.bind(this),
                 error: function (XMLHttpRequest,textStatus,errorThrown) {
-                    // message.warning(errorThrown.msg)
-                    this.setState({ loading: false })
+                    // message.warning(errorThrown)
+                    // this.setState({ loading: false })
                 }
             });
         }
@@ -132,7 +146,7 @@ export default class Index extends Component {
         className="modal-header modal-body"
       >
         <div className="modalcontent">
-          <Form layout="horizontal" onSubmit={this.handleSubmit}>
+          <FormItem layout="horizontal" onSubmit={this.handleSubmit}>
             <FormItem {...formItemLayout} label="名称" hasFeedback>
               {getFieldDecorator('chineseName', {
                 initialValue: values.post || '',
@@ -149,15 +163,52 @@ export default class Index extends Component {
               })(<Input placeholder="请输入链接" />)}
                 {/*disabled={this.props.type === 'edit'} />*/}
             </FormItem>
-            <FormItem {...formItemLayout} label="状态" hasFeedback>
-              {getFieldDecorator('policeCode', {
-                initialValue: values.statusLabel,
-                rules: [
-                  // { required: true, message: '请输入警号' },
-                  { pattern: regExpConfig.zeroFirst, message: '请输入整数' },
-                ],
-              })(<Input placeholder="1为正常，0为停用" maxLength={1} disabled={this.props.type === 'add'}/>)}
-            </FormItem>
+            {/*<FormItem {...formItemLayout} label="状态" hasFeedback>*/}
+              {/*{getFieldDecorator('policeCode', {*/}
+                {/*initialValue: values.statusLabel,*/}
+                {/*rules: [*/}
+                  {/*// { required: true, message: '请输入警号' },*/}
+                  {/*{ pattern: regExpConfig.zeroFirst, message: '请输入整数' },*/}
+                {/*],*/}
+              {/*})(<Input placeholder="1为正常，0为停用" maxLength={1} disabled={this.props.type === 'add'}/>)}*/}
+            {/*</FormItem>*/}
+
+              {
+                  this.props.type === 'edit' ?
+                      (<FormItem {...formItemLayout} label="状态" hasFeedback>{
+                      getFieldDecorator('policeCode',{
+                          initialValue : values.statusLabel ? '正常' : '停用',
+                          rules: [{required: true, message: 'Please select your gender'}]
+                      })
+                      (
+                          <Select
+                              // defaultValue={}
+                              // onChange={this.Changeo}
+                          >
+                              <Option value="1">正常</Option>
+                              <Option value="0">停用</Option>
+                          </Select>
+                      )}
+              </FormItem>) : null
+              }
+
+              {/*<FormItem {...formItemLayout} label="状态" hasFeedback>*/}
+                  {/*{*/}
+                  {/*getFieldDecorator('policeCode',{*/}
+                      {/*rules: [{required: true, message: 'Please select your gender'}]*/}
+                  {/*})*/}
+                      {/*(*/}
+                      {/*<Select*/}
+                          {/*defaultValue={values.statusLabel ? '正常' : '停用'}*/}
+                          {/*// onChange={this.Changeo}*/}
+                          {/*disabled={this.props.type === 'add'}*/}
+                      {/*>*/}
+                          {/*<Option value="1">正常</Option>*/}
+                          {/*<Option value="0">停用</Option>*/}
+                      {/*</Select>*/}
+                  {/*)}*/}
+              {/*</FormItem>*/}
+
             {/*<FormItem {...formItemLayout} label="登陆用户名" hasFeedback>*/}
               {/*{getFieldDecorator('username', {*/}
                 {/*initialValue: values.username || '',*/}
@@ -225,7 +276,7 @@ export default class Index extends Component {
               {/*</Select>)}*/}
             {/*</FormItem>*/}
             <Button className="hide" type="primary" htmlType="submit">确定</Button>
-          </Form>
+          </FormItem>
         </div>
       </Drawer>
     )

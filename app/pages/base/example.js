@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { Spin, notification, Button, Popconfirm, Form, Input, message, Layout,Table } from 'antd'
 import $ from 'jquery';
 import path from './testpath'
+import copy from 'copy-to-clipboard'
 import TableList from '@tableList'
 import { synUser } from '@apis/common'
 import {
@@ -82,6 +83,11 @@ export default class app extends Component {
         console.log(this.props)
     }
 
+    copy(e){
+        copy(e.target.id);
+        message.success("复制链接成功")
+    }
+
     getAllData() {
       let _this = this;
         $.ajax({
@@ -100,7 +106,7 @@ export default class app extends Component {
                     mytext.push({
                         key : i,
                         id : obj[i].guid,
-                        weblink:path.path2+obj[i].guid ,
+                        weblink:<span onClick={_this.copy.bind(this)} id={path.path2+obj[i].guid}>{path.path2+obj[i].guid}</span> ,
                         chineseName : parseInt(i)+1,
                         post : obj[i].productName,
                         username : obj[i].sourceWebLink,
