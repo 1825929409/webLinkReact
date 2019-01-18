@@ -2,16 +2,6 @@ import React, { Component } from 'react'
 import { Spin, notification, Button, Popconfirm, Form, Input, message, Layout } from 'antd'
 import $ from 'jquery';
 import path from './testpath'
-// import { brandName } from '@config'
-// import {
-//     fetchUserDepttList,
-//     fetchUserList,
-//     fetchUserDetail,
-//     fetchUserDelete,
-//     fetchRoleList,
-//     fetchChangeUserStatus,
-// } from '@apis/manage'
-
 
 export default class transit extends Component {
     // 初始化页面常量 绑定事件方法
@@ -20,7 +10,6 @@ export default class transit extends Component {
         this.getData = this.getData.bind(this);
         this.getUrlParam = this.getUrlParam.bind(this);
         this.state = {
-            // targetId: '',
             brandName:'正在中转中...',
             userRoleSetResult: { list: [], loading: false },
             yan: {color:'white'},
@@ -65,7 +54,7 @@ export default class transit extends Component {
                         yan:{color:'black'},
                     })
                 }else {
-                    window.location.href = obj;
+                    window.location.replace(obj)
                 }
             },
             error: function () {
@@ -86,9 +75,8 @@ export default class transit extends Component {
         } = this.state
         return (
             <div className="welcome">
-                <div className="" style={center}>
+                <div style={center}>
                     <div className="title"><h1 style={yan}>{brandName}</h1></div>
-                    {/*<div><h2 style={yan}>{brandName}</h2></div>*/}
                 </div>
             </div>
         )
