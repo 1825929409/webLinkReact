@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>transit</title>
+    <script type="text/javascript">
+        var targetId = getUrlParam('targetId=');
+        function getUrlParam (name)  {
+            var r = window.location.href.split(name)[1];
+            if (r != null) {
+                return r;
+            }else{
+                return null;
+            }
+        }
+        getData(targetId);
+        function getData (targetId){
+            if (!targetId){
+                console.log('kong')
+                return;
+            }
+
+            var xhr;
+            if (window.XMLHttpRequest){//IE7+, Firefox, Chrome, Opera, Safari
+                xhr = new XMLHttpRequest();
+            } else{// IE6, IE5
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            xhr.onreadystatechange = function(){
+                if (xhr.readyState == 4 && (xhr.status==200)){
+                    var obj = xhr.responseText;
+                    if (obj == '此链接不存在' || obj == '此链接已关闭'){
+                        document.getElementById("controller").innerText = "此链接已关闭";
+                    }else {
+                        window.location.replace(obj)
+                    }
+                }
+            }
+            xhr.open("POST","http://120.79.117.64:8383/weblink/findWeblinkByGiud",true);//以POST方式请求该接口
+            xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");//添加Content-type
+            xhr.send("guid="+targetId);//发送请求参数间用&分割
+        }
+    </script>
+</head>
+<body>
+<span id="controller"></span>
+</body>
+</html>
