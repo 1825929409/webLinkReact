@@ -46,19 +46,25 @@ export default class index extends Component {
         password: fieldsValue.password ? fieldsValue.password : '',
       };
       this.submitLoading = true
-      this.props.dispatch(fetchPassword({
-        ...values,
-      }, (res) => {
-        message.success(res.msg)
-        this.submitLoading = false
-        this.setState({})
-        this.props.onCancel()
-      }, (res) => {
-        message.warning(res.msg)
-        this.props.form.setFields({ oldPwd: '', password: '', confirm: '' })
-        this.submitLoading = false
-        this.setState({})
-      }))
+      this.submitLoading = false
+      this.props.onCancel()
+      // this.props.dispatch(
+        // this.setState({})
+
+      //     fetchPassword({
+      //   ...values,
+      // }, (res) => {
+      //   message.success(res.msg)
+      //   this.submitLoading = false
+      //   this.setState({})
+      //   this.props.onCancel()
+      // }, (res) => {
+      //   message.warning(res.msg)
+      //   this.props.form.setFields({ oldPwd: '', password: '', confirm: '' })
+      //   this.submitLoading = false
+      //   this.setState({})
+      // })
+      //   )
 
       // this.props.form.resetFields()
     });

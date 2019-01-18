@@ -9,7 +9,7 @@ import { clearGformCache2, login } from '@actions/common'
 import { /* login,  */staff, menu, getBtns } from '@apis/common'
 import Logo from '@components/logo/logo'
 import QueuiAnim from 'rc-queue-anim'
-
+import $ from 'jquery'
 // import '@styles/base.less'
 import '@styles/login.less'
 
@@ -36,6 +36,7 @@ export default class Login extends Component {
 
   componentWillMount() {
     this.props.dispatch(clearGformCache2({}))
+      console.log(this.props)
   }
 
   // #region 收缩业务代码功能
@@ -46,75 +47,61 @@ export default class Login extends Component {
       message.warning('证书登录功能未开通')
       return
     }
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        const query = this.props.form.getFieldsValue()
-        this.setState({ loading: true })
-          sessionStorage.setItem('token', '111')
-            sessionStorage.setItem('ticket', '11111')
 
-          menu({}, (response) => {
-              const nav = response.data.list || []
-              if (nav && nav[0]) {
-                  sessionStorage.setItem('gMenuList', JSON.stringify(nav))
-                  sessionStorage.setItem('topMenuReskey', nav[0].resKey)
-                  sessionStorage.setItem('leftNav', JSON.stringify(nav))
+      this.props.form.validateFields((err,values) => {
+        if (!err){
 
-                  hashHistory.push('/center')
-                  // staff({ usercode: query.username }, (resp) => {
-                  // }, (r) => {
-                  //   message.warning(r.msg)
-                  //   this.setState({
-                  //     loading: false,
-                  //   })
-                  // })
-              }
-          }, (r) => {
-              // message.warning(r.msg)
-              this.setState({
-                  loading: false,
-              })
-          })
+            this.setState({loading:true},() =>{
+                setTimeout(function () {
+                    sessionStorage.setItem('token','123')
+                    this.state.loading = false
+                    hashHistory.push('/center')
+                }.bind(this),500)
+            })
 
-        // this.props.dispatch(login(values, (res) => {
-        //   sessionStorage.setItem('token', res.data.token)
-        //   sessionStorage.setItem('ticket', res.data.ticket)
-        //   // getBtns({}, (response) => {
-        //   //   console.log('获取菜单id');
-        //   //   console.log(response);
-        //   // })
-        //   menu({}, (response) => {
-        //     console.log('访问接口');
-        //     console.log(response);
-        //     const nav = response.data.list || []
-        //     if (nav && nav[0]) {
-        //       sessionStorage.setItem('gMenuList', JSON.stringify(nav))
-        //       sessionStorage.setItem('topMenuReskey', nav[0].resKey)
-        //       sessionStorage.setItem('leftNav', JSON.stringify(nav))
-        //
-        //         hashHistory.push('/center')
-        //       // staff({ usercode: query.username }, (resp) => {
-        //       // }, (r) => {
-        //       //   message.warning(r.msg)
-        //       //   this.setState({
-        //       //     loading: false,
-        //       //   })
-        //       // })
-        //     }
-        //   }, (r) => {
-        //     // message.warning(r.msg)
-        //     this.setState({
-        //       loading: false,
-        //     })
-        //   })
-        // }, (res) => {
-        //   // message.warning(res.msg)
-        //   this.setState({
-        //     loading: false,
-        //   })
-        // }))
-      }
-    })
+        }
+      })
+    // this.props.form.validateFields((err, values) => {
+    //   if (!err) {
+    //     const query = this.props.form.getFieldsValue()
+    //     // this.setState({ loading: true })
+    //       // sessionStorage.setItem('token', '111')
+    //       //   sessionStorage.setItem('ticket', '11111')
+    //       // sessionStorage.setItem('gMenuList', '8')
+    //       //         sessionStorage.setItem('topMenuReskey','8')
+    //       //         sessionStorage.setItem('leftNav', '8')
+    //
+    //       const arr = [{"id":10060,"resName":"工作台","children":[{"id":10063,"resName":"概览","resKey":"desk$/index","resIcon":""},{"id":600110233,"resName":"图表","resKey":"echarts","resIcon":""},{"id":100631,"resName":"编辑器","resKey":"editor","resIcon":""}],"resKey":"desk$","resIcon":"home"}];
+    //         const top = "desk$";
+    //       // menu({}, (response) => {
+    //       //     const nav = response.data.list || []
+    //       //     if (nav && nav[0]) {
+    //       //         sessionStorage.setItem('gMenuList', JSON.stringify(nav))
+    //       //         sessionStorage.setItem('topMenuReskey', nav[0].resKey)
+    //       //         sessionStorage.setItem('leftNav', JSON.stringify(nav))
+    //       //         console.log(222)
+    //       //         console.log(JSON.stringify(nav[0].resKey))
+    //       //
+    //       //         hashHistory.push('/center')
+    //       //         // staff({ usercode: query.username }, (resp) => {
+    //       //         // }, (r) => {
+    //       //         //   message.warning(r.msg)
+    //       //         //   this.setState({
+    //       //         //     loading: false,
+    //       //         //   })
+    //       //         // })
+    //       //     }
+    //       // }, (r) => {
+    //       //     // message.warning(r.msg)
+    //       //     this.setState({
+    //       //         loading: false,
+    //       //     })
+    //       // })
+    //
+    //   }
+    //
+    //
+    // })
   }
 
   // #endregion
@@ -125,8 +112,8 @@ export default class Login extends Component {
     return (
       <div className="login-container">
         <div className="extraLink">
-          <a href="http://56.32.3.185:7777/pgis/html/prologue/prologue.html" target="_blank" rel="noopener noreferrer">数据承载</a>
-          <a href="http://56.32.3.123:8080/search/sspt/datasearch/prologue.html" target="_blank" rel="noopener noreferrer">数据纽带</a>
+          {/*<a href="http://56.32.3.185:7777/pgis/html/prologue/prologue.html" target="_blank" rel="noopener noreferrer">数据承载</a>*/}
+          {/*<a href="http://56.32.3.123:8080/search/sspt/datasearch/prologue.html" target="_blank" rel="noopener noreferrer">数据纽带</a>*/}
         </div>
         <div className="flexcolumn">
           <div className="login-header" key="header">
@@ -135,7 +122,7 @@ export default class Login extends Component {
                 {
                   this.state.show ? [
                     <p key="0" className="title">{brandName}
-                      {/* <span className="en">BIG DATA</span> */}
+                       <span className="en">BIG DATA</span>
                     </p>,
                   ] : null
                 }
@@ -194,7 +181,7 @@ export default class Login extends Component {
           <QueuiAnim component="div" className="login-footer" delay={600} type="bottom" key="footer">
             {
               this.state.show ? [
-                <p key="0"> 浙江七巧板信息科技股份有限公司 </p>,
+                <p key="0"> 南通乘物游心计算机有限公司 </p>,
               ] : null
             }
 

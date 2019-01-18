@@ -33,16 +33,8 @@ export default class Header extends Component {
       title: '提示',
       content: '确认退出登录吗？',
       onOk() {
-        logout({}, (result) => {
-          // console.log(result)
-          if (result.status === 1) {
             sessionStorage.clear()
-            // config.staff = {}
             hashHistory.push('/login')
-          } else {
-            message.warning(result.msg)
-          }
-        })
       },
     })
   }
@@ -78,25 +70,25 @@ export default class Header extends Component {
   }
 
   render() {
-    const userinfo = JSON.parse(sessionStorage.getItem('userinfo')) || {}
-    const roles = []
-    userinfo && userinfo.roles && userinfo.roles.map((item) => {
-      roles.push(item.roleName)
-    })
+    // const userinfo = JSON.parse(sessionStorage.getItem('userinfo')) || {}
+    // const roles = []
+    // userinfo && userinfo.roles && userinfo.roles.map((item) => {
+    //   roles.push(item.roleName)
+    // })
     // console.log(JSON.parse(sessionStorage.getItem('userinfo')))
     const userCenter = (
       <Menu className="nav-dropmenu">
         <Menu.Item key="1">
           <Icon type="caret-up" />
-          <span className="label">角色： </span><span className="value" title={roles.join(',')}>{roles.join(',') || '---'}</span>
+          <span className="label">角色： </span><span className="value">---</span>
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="2">
-          <span className="label">警号： </span><span className="value">{userinfo.policeCode || '---'}</span>
+          <span className="label">警号： </span><span className="value">---</span>
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="3">
-          <span className="label">职务： </span><span className="value">{userinfo.duty || '---'}</span>
+          <span className="label">职务： </span><span className="value">---</span>
         </Menu.Item>
         <Menu.Divider />
         <Menu.Item key="4">
@@ -111,8 +103,8 @@ export default class Header extends Component {
         </Menu.Item>
       </Menu>
     )
-    const { gMenuList, topMenuReskey } = this.props
-    const topKey = topMenuReskey
+    // const { gMenuList, topMenuReskey } = this.props
+    // const topKey = topMenuReskey
     return (
       <header id="navbar">
         <div id="navbar-container" className="boxed">
@@ -124,20 +116,20 @@ export default class Header extends Component {
                 </span>
               </div>
               <nav className="topMenus hide">
-                {
-                  gMenuList && gMenuList.map((item, index) => (<span
-                    className={item.resKey === topKey ? 'topMenu on' : 'topMenu'}
-                    key={item.resKey}
-                    onClick={() => this.props.topMenuClick(item, index)}
-                  >{item.resName}</span>))
-                }
+                {/*{*/}
+                  {/*gMenuList && gMenuList.map((item, index) => (<span*/}
+                    {/*className={item.resKey === topKey ? 'topMenu on' : 'topMenu'}*/}
+                    {/*key={item.resKey}*/}
+                    {/*onClick={() => this.props.topMenuClick(item, index)}*/}
+                  {/*>{item.resName}</span>))*/}
+                {/*}*/}
               </nav>
             </Col>
             <Col span={4} className="col">
               <ul>
                 <li>
                   <Dropdown overlay={userCenter}>
-                    <a className="ant-dropdown-link"><Icon type="user" />{userinfo.chineseName || userinfo.username}</a>
+                    <a className="ant-dropdown-link"><Icon type="user" /></a>
                   </Dropdown>
                 </li>
               </ul>

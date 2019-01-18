@@ -15,11 +15,13 @@ export default class app extends Component {
     }
   }
 
+
+
   componentDidMount() {
     // this.loadChart()
-    setTimeout(() => {
+    // setTimeout(() => {
       this.loadChart()
-    }, 500)
+    // }, 500)
   }
 
   loadChart() {

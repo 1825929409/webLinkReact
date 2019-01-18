@@ -62,29 +62,29 @@ export default class LeftNav extends Component {
     // /*
     // **下面这一整段代码，是为了获取当前菜单是哪个，要默认打开这个一级菜单, 只遍历两层结构
     // */
-    const navList = JSON.parse(sessionStorage.getItem('leftNav')) || []
-    // console.log(navList)
-    const curPath = `${pathname.split('$')[0]}`.replace('/', '')
-    let len = 0
-    let curSub
-    navList.map((item, index) => {
-      // console.log(item.resKey)
-      if (item.children && item.children.length > 0) {
-        len += 1
-      }
-      if (item.resKey && curPath === item.resKey.split('$')[0].replace('/', '')) {
-        curSub = len
-      } else if (item.children && item.children.length > 0) {
-        item.children.map((record) => {
-          if (item.resKey && curPath === record.resKey.split('$')[0].replace('/', '')) {
-            curSub = len
-          }
-        })
-      }
-    })
-    this.setState({
-      openKeys: [`sub${curSub - 1}`],
-    })
+    // const navList = JSON.parse(sessionStorage.getItem('leftNav')) || []
+    // // console.log(navList)
+    // const curPath = `${pathname.split('$')[0]}`.replace('/', '')
+    // let len = 0
+    // let curSub
+    // navList.map((item, index) => {
+    //   // console.log(item.resKey)
+    //   if (item.children && item.children.length > 0) {
+    //     len += 1
+    //   }
+    //   if (item.resKey && curPath === item.resKey.split('$')[0].replace('/', '')) {
+    //     curSub = len
+    //   } else if (item.children && item.children.length > 0) {
+    //     item.children.map((record) => {
+    //       if (item.resKey && curPath === record.resKey.split('$')[0].replace('/', '')) {
+    //         curSub = len
+    //       }
+    //     })
+    //   }
+    // })
+    // this.setState({
+    //   openKeys: [`sub${curSub - 1}`],
+    // })
   }
 
   // 菜单点击事件
@@ -127,69 +127,76 @@ export default class LeftNav extends Component {
   }
 
   // 二级菜单的生成
-  renderLeftNav(options) {
-    const self = this
-    const children = JSON.parse(sessionStorage.getItem('leftNav')) || []
-    console.log('二级菜单');
-    console.log(children);
-    return children.map((item, index) => {
-      if (!item.children || item.children.length === 0) {
-        return (
-          <Menu.Item key={item.resKey ? item.resKey : item.id} name={item.resName} style={{ paddingLeft: 0 }}>
-            <i className={`qqbicon qqbicon-${item.resIcon}`} title={item.resName} />
-            <span className="menu-name">{item.resName}</span>
-          </Menu.Item>
-        )
-      }
-      const key = `sub${index}`
-      return (
-        <SubMenu key={key}
-          title={
-            <span>
-              <Icon type="caret-down" title={item.resName} />
-              <span className="menu-name">{item.resName}</span>
-            </span>
-          }
-        >
-          {
-            item.children.map((child, _index) =>
-              (
-                <Menu.Item key={child.resKey ? child.resKey : child.id} name={child.resName}>
-                  <i className={`qqbicon qqbicon-${child.resIcon}`} title={child.resName} />
-                  <span className="menu-name">{child.resName}</span>
-                </Menu.Item>
-              ))
-          }
-        </SubMenu>
-      )
-    })
+  // renderLeftNav(options) {
+  //   const self = this
+  //   const children = JSON.parse(sessionStorage.getItem('leftNav')) || []
+  //   console.log('二级菜单');
+  //   console.log(children);
+  //   return children.map((item, index) => {
+  //     if (!item.children || item.children.length === 0) {
+  //       return (
+  //         <Menu.Item key={item.resKey ? item.resKey : item.id} name={item.resName} style={{ paddingLeft: 0 }}>
+  //           <i className={`qqbicon qqbicon-${item.resIcon}`} title={item.resName} />
+  //           <span className="menu-name">{item.resName}</span>
+  //         </Menu.Item>
+  //       )
+  //     }
+  //     const key = `sub${index}`
+  //     return (
+  //       <SubMenu key={key}
+  //         title={
+  //           <span>
+  //             <Icon type="caret-down" title={item.resName} />
+  //             <span className="menu-name">{item.resName}</span>
+  //           </span>
+  //         }
+  //       >
+  //         {
+  //           item.children.map((child, _index) =>
+  //             (
+  //               <Menu.Item key={child.resKey ? child.resKey : child.id} name={child.resName}>
+  //                 <i className={`qqbicon qqbicon-${child.resIcon}`} title={child.resName} />
+  //                 <span className="menu-name">{child.resName}</span>
+  //               </Menu.Item>
+  //             ))
+  //         }
+  //       </SubMenu>
+  //     )
+  //   })
+  //
+  // }
 
-      // const key = `sub${0}`
-      // return (
-      //     <SubMenu key={key}
-      //              title={
-      //                <span>
-      //                 <Icon type="caret-down" title='工作台' />
-      //                 <span className="menu-name">工作台</span>
-      //               </span>
-      //              }
-      //     >
-      //     <Menu.Item key='desk$/index' name='概览'>
-      //       <i className={`qqbicon qqbicon-`} title='概览' />
-      //       <span className="menu-name">概览</span>
-      //     </Menu.Item>
-      //       <Menu.Item key='echarts' name='图表'>
-      //         <i className={`qqbicon qqbicon-`} title='图表' />
-      //         <span className="menu-name">图表</span>
-      //       </Menu.Item>
-      //       <Menu.Item key='editor' name='编辑器'>
-      //         <i className={`qqbicon qqbicon-`} title='编辑器' />
-      //         <span className="menu-name">编辑器</span>
-      //       </Menu.Item>
-      //     </SubMenu>
-      // )
+    // 二级菜单的生成
+    renderLeftNav() {
+            const key = `sub${0}`
+            const key2 = 'desk$/index'
+            const key3 = 'echarts'
+            const key4 = 'editor'
+            return (
+                <SubMenu key={key}
+                         title={
+                           <span>
+                            <Icon type="caret-down" title="工作台"/>
+                            <span className="menu-name">工作台</span>
+                          </span>
+                         }
+                >
+                  <Menu.Item key={key2} name="概览">
+                    <i className="qqbicon qqbicon-biaoge" title="概览" />
+                    <span className="menu-name">概览</span>
+                  </Menu.Item>
+                  <Menu.Item key={key3} name="图表">
+                    <i className="qqbicon qqbicon-biaoge" title="图表" />
+                    <span className="menu-name">图表</span>
+                  </Menu.Item>
+                  <Menu.Item key={key4} name="编辑器">
+                    <i className="qqbicon qqbicon-biaoge" title="编辑器" />
+                    <span className="menu-name">编辑器</span>
+                  </Menu.Item>
 
-  }
+                </SubMenu>
+            )
+    }
 
   // 左侧菜单高亮的控制
   leftMenuHighLight = () => {
